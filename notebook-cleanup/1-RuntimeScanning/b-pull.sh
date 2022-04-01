@@ -15,21 +15,10 @@
 ### In the event that the output does not match what we expect break after 10 sleeps
 ###############################################
 
-crane auth login -u $JFROG_USERNAME -p $JFROG_PASSWORD jfrog.aaw.cloud.statcan.ca
+crane auth login -u $JFROG_USER -p $JFROG_PASSWORD jfrog.aaw.cloud.statcan.ca
 while IFS= read -r line; do
   crane pull jfrog.aaw.cloud.statcan.ca/$line temporary 
-  rm temporary
+  if rm temporary 2>&1 | grep -m 1 "cannot remove 'temporary'"; then # add something here so if "cannot remove 'temporary write to file'"
+    echo "The following image could not be found --> "$line >> b-images-not-found.txt
+  fi
 done < a-uniqe-nb-images.txt
-
-
-## TEST, this doesnt work super well
-#until crane pull jfrog.aaw.cloud.statcan.ca/jose-play/busybox:stable temporary 2>&1 \
-#  | grep -m 1 "(compressed) in cache\|Forbidden"
-#  do
-#    sleep 1
-#    ((count++))
-#    if [ $count -eq 10 ]
-#      then
-#      break
-#    fi
-#  done

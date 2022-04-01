@@ -2,7 +2,7 @@
 
 ###############################################
 # Purpose: Get a list of vulnerabilities via XRAY Rest API
-### BUG TO FIX BELOW
+###
 #####
 # Actions:
 # Requires:
